@@ -1,0 +1,45 @@
+@startuml
+
+|Client|
+start
+
+split
+    :Remplir panier;
+split again
+    -[hidden]->
+    (A)
+end split
+
+if (A fini ?) then (Yes)
+
+    :Payer;
+    while (Payement refusé ?)
+        :Payer;
+    end while
+
+    :Envoi de demande de création d'une facture; <<output>>
+    |Système|
+    :Reçu de demande; <<input>>
+    : Facture \n[Nouveau]; <<task>>
+
+    |Client|
+    :Valider la commande;
+
+    :Envoi de demande de création d'un bon de commande; <<output>>
+    |Système|
+    :Reçu de demande; <<input>>
+    :Bon de commande [Nouveau]; <<task>>
+
+    |Magasinier|
+
+
+
+else (Non)
+    |Client|
+    (A)
+endif
+
+stop
+
+
+@enduml
