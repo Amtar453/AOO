@@ -1,0 +1,43 @@
+@startwbs
+* Project "Magasin du Grand Bazard"
+** Initiation
+*** Identifier les besoins (voir énoncé APM)
+*** Définition des objectifs (Voir énoncé APM)
+** Planning
+*** Work breakdown structure (2h)
+*** Analyse
+**** Besoin (voir le cours d'APM)
+**** Analyse Orienté Objet (100h)
+*** Agenda (0.5h)
+*** Définition de l'équipe de développement
+**** 1 chef d'équipe
+**** 1 chef de projet
+**** 1+ développeur sénior (tech lead)
+**** 1+ développeur sénior (responsable test)
+**** 1+ développeur sénior (responsable architecture)
+**** 1+ développeur sénior (responsable git)
+**** 1+ développeur junior 
+*** Budgetisation 
+**** Salaire équipe 
+**** Matériel développement 
+** Execution
+*** Development
+**** Noyau de l'application (10 heures)
+**** fonctionnalité/classe/module 1 (X heures)
+**** .... Autres FONCTIONNALITE ....
+*** Testing
+**** Test unitaire 
+' 1 dev écrit le code, 1 dev décrit le test, 1 dev écrit le test
+**** Test fonctionnalité
+**** Test intégration
+**** ...
+** Closure
+*** Installation chez le client
+*** Acceptance 
+*** Post mortem 
+*** Phase de transition (équipe dev > équipe maintenance)
+**** Description technique
+**** Description architecture
+**** ...
+*** Retour 
+@endwbs
