@@ -1,0 +1,181 @@
+@startuml 
+skin rose 
+
+actor "Client" as client
+
+box "Site internet" #LightBlue
+entity "Frontend" as front
+entity "Serveur backend" as back
+database "Serveur Base de donnée" as bd 
+entity "Serveur mail" as mail
+end box
+
+box "Magasin physique" #LightGreen
+actor "Magasinier" as magasinier
+actor "Responsable livraison" as livraison
+actor "Livreur" as livreur
+end box 
+
+client->front:"requette page d'acceuil"
+activate client
+activate front  
+front-->client:"réponse page d'acceuil"
+client->>front:"clique bouton: Se connecter"
+
+alt "cookie connection valide"
+    front->back:"refresh_cookie()"
+    activate back  
+    back-->front:cookie
+else else
+    loop "cookie invalide"
+        front->client:"Demander identifiant et mot de passe"
+        client-->front:"Entrer information demandée"
+        front->>back:"connect_client(id, password)"
+        back->bd:"get_id_and_password(id, password)"
+        bd-->back
+        alt "Identifiant et mot de passe valide"
+            back-->front:"cookie"
+        else id introuvable 
+            back-->front:"404 not found"
+        else password invalide
+            back-->front:"403 acess refused"
+        end alt 
+    end loop
+end alt
+
+front->back:"get_available_articles()"
+back-->front
+front-->client:"Afficher la liste des articles disponible"
+
+loop "Le client souhaite ajouter plus d'articles dans son panier"
+    client->front:"ajouter un produit au panier"
+    front->back:"get_max_available(article)"
+    back-->front:
+    front->client:"Demander le nombre d'exemplaire du produit (max la limite obtenue juste avant)"
+    client-->front:
+    front->back:"reserve_in_cart(id_article, quantity)"
+    back-->front
+end loop 
+
+client->>front:"Commander le panier"
+
+loop "payement en attente"
+    front->client:"Demander les informations banquaires"
+    client-->front
+    front->back:"validate_payement(bank_informations)"
+    back-->front
+end loop 
+
+front->>back:"validate_command(cart)"
+
+par 
+back->bd:"update_available_stock(cart)"
+activate bd  
+bd-->back
+else 
+back->bd:"save_cart(client_id, cart)"
+bd-->back
+else
+back->mail:"send_invoice(client_id, cart)"
+activate mail  
+mail-->back
+mail->client:"sent_invoice(client_email, cart)"
+client-->mail
+deactivate mail  
+else
+back->mail:"sent_to(storekeeper_id, cart, delivery_date.day - 1)"
+activate mail  
+mail-->back
+end par
+
+back-->front
+front-->client
+
+deactivate client 
+deactivate front  
+deactivate back  
+deactivate bd  
+
+
+== "1 jour avant la livraison" ==
+
+mail->magasinier:"Le mail arrive"
+deactivate mail  
+activate magasinier
+magasinier->>front:"Accède au bon de commande"
+activate front  
+front->>back:"get_cart(id)"
+activate back  
+back->bd:"get_cart(id)"
+bd-->back
+back-->front
+deactivate back  
+front-->magasinier
+deactivate front  
+
+loop "Panier incomplet"
+magasinier->>front:"Retirer les des stocks l'article récupéré"
+activate front 
+front->>back:"update_stock(article.id, quantity)"
+activate back
+back->bd:"update_stock(article.id, article.quantity - quantity)"
+bd-->back
+back-->front
+deactivate back
+front-->magasinier
+deactivate front 
+end loop 
+
+magasinier->>front:"Emballer la commande et stoker dans l'espace 'Livraison de demain' au sein de l'entrepot"
+activate front
+front->>back:"add_stock(cart, shelf.id)"
+activate back
+back->bd:"add_stock(cart, shelf.id)"
+bd-->back 
+back-->front
+deactivate back 
+front-->magasinier
+deactivate front
+
+magasinier->livraison:"Prévenir de la livraison du lendemain"
+livraison-->magasinier
+
+deactivate magasinier
+
+== "Jour de la livraison" ==
+
+livreur->livraison:"Récupérer la liste des livraisons du jour"
+livraison-->livreur
+livreur->>front:"Récupérer la commande et charger dans camion"
+activate livreur
+activate front 
+front->>back:"delete_stock(cart, shelf.id)"
+activate back 
+back->bd:"delete_stock(cart, shelf.id)"
+bd-->back 
+back-->front
+deactivate back 
+front-->livreur 
+deactivate front 
+livreur->>client:"Faire signer le bon de livraison"
+activate client
+livreur->>front:"Afficher l'espace de signature du bon de livraison"
+activate front
+client->front:"Signature"
+front->>back:"signing(client.id, token)"
+activate back 
+back->bd:"signing(client.id, token)"
+bd-->back
+back-->front 
+deactivate back
+front-->client
+front-->livreur 
+deactivate front 
+client-->livreur
+livreur->client:"Livrer la comande et dire merci d'avoir utiliser nos services"
+client-->livreur:"Merci bonne journée :)"
+
+deactivate livreur 
+deactivate client
+
+@enduml 
