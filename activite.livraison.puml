@@ -1,0 +1,75 @@
+@startuml
+
+|Client|
+start
+
+split
+    :Remplir panier;
+    |Système|
+    :Panier [Nouveau]; <<task>>
+split again
+    -[hidden]->
+    (A)
+    |Système|
+    :Panier [Ajout]; <<task>>
+end split
+
+|Client|
+if (A fini ?) then (Yes)
+
+    :Effectue le payement;
+    while (Payement refusé ?)
+        :Reéffectue le payement;
+    end while
+    :Validation de la commande;
+
+    |Système|
+    :Création d'une facture;
+    : Facture \n[Nouveau]; <<task>>
+
+    |Système|
+    :Réception du panier;
+    :Transformation de ce panier en bon de commande;
+    :Bon de commande [Nouveau]; <<task>>
+    :Envoi du bon de commande; <<output>>
+
+    |Magasinier|
+    :1 jour ouvrable avant la date de livraison; <<timeEvent>>
+    :Reçu du bon de commande; <<input>>
+
+    :Préparation de la commande;
+    :Enregistrement du bon préparé;
+
+    |Système|
+    :Bon de commande [Préparée]; <<task>>
+    :Diminution du stock par rapport au bon de commande;
+    :Stock [Diminués]; <<task>>
+
+    :Création de bon de livraison;
+    :Bon de livraison [Nouveau]; <<task>>
+
+    |Magasinier|
+    :Prévenir le service de livraison;
+    :Envoi d'un signal; <<output>>
+
+    |Service de livraison|
+    :Réception du signal; <<input>>
+    :S'occupe de la livraison;
+
+    |Client|
+    :Reçoit ses courses;
+    :Signe le bon de livraison;
+
+    |Système|
+    :Bon de livraison [Signé]; <<task>>
+
+else (Non)
+    |Client|
+    (A)
+    detach
+endif
+
+stop
+
+
+@enduml
