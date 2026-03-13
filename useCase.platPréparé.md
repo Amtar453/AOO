@@ -1,4 +1,4 @@
-# Use Case : Plat préparé 
+# Use Case : Préparation des plats
 
 ## Acteurs
 
