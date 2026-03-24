@@ -1,0 +1,94 @@
+@startuml Plats_prepares 
+skin rose
+
+|Responsable des ventes|
+start
+
+:Consulter catalogue des recettes;
+
+|Responsable des ventes|
+:Trouver des plats à préparer;
+
+|Système|
+:Création d'un ordre de préparation;
+:Changement des droits d'accès;
+:Ordre de préparation [Nouveau]; <<task>>
+
+|Responsable des ventes|
+:Encoder les plats à préparer;
+
+|Chef Traiteur|
+:Compléter l'ordre de préparation;
+:Dresser la liste des ingrédients;
+
+|Système|
+:Ordre de préparation [Complèté]; <<task>>
+
+|Gestionnaire Stock|
+:Demander vérification des stocks;
+
+|Système|
+:Consulter les stocks;
+:Calculer les disponibilités;
+
+:Générer fiche des disponibilités;
+:Changement des droits d'accès;
+:Fiche des disponibilités [Nouveau]; <<task>>
+
+|Système|
+fork
+|Responsable des ventes|
+:Consulter fiche des disponibilités;
+:Valider l'ordre de préparation;
+
+fork again
+|Chef Traiteur|
+:Consulter fiche des disponibilités;
+:Adapter les dates de production;
+
+|Système|
+end fork
+:Ordre de préparation [Validé]; <<task>>
+
+|Cuisinier|
+split
+:Attente de date de production; <<timeEvent>>
+:Consulter les plats du jour;
+
+split again
+-[hidden]->
+(A)
+:Consulter les plats du restant;
+end split
+
+|Gestionnaire Stock|
+:Préparer les produits;
+
+|Cuisinier|
+:Préparer les plats;
+
+:Encoder quantités réellement produites;
+
+|Système|
+:Mise à jour de l'ordre de préparation;
+:Ordre de préparation [Mis à jour]; <<task>>
+
+:Génération des étiquettes;
+:Étiquettes [Nouvelles]; <<task>>
+
+|Cuisinier|
+:Imprimer les étiquettes;
+:Coller les étiquettes sur les plats;
+
+|Gestionnaire Stock|
+:Rangement des plats au frais;
+
+|Cuisinier|
+if (Reste t'il des plats a cuisiner ?) then (non)
+    stop
+else (oui)
+    (A)
+    detach
+endif
+
+@enduml

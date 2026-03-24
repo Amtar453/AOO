@@ -1,0 +1,107 @@
+@startuml "Réapprovisionnement automatique"
+
+skin rose
+/'skinparam sequenceMessageAlign center'/
+
+actor "Gestionnaire de stock" as gestionnaire
+entity "Système Magasin" as systeme
+database "Base de données" as bdd
+actor "Fournisseur" as fournisseur
+actor "Comptable" as comptable
+
+/'verification des stock'/
+
+/' Vérification des stocks '/
+activate gestionnaire
+gestionnaire ->> systeme : lancer_verification_stock()
+
+activate systeme
+systeme -> bdd : verification_stock()
+
+activate bdd
+bdd --> systeme : liste produits manquant
+deactivate bdd
+
+/'systeme -> systeme : comparer_quantite_au_seuil()'/
+
+systeme -> bdd : verifier_promotions()
+activate bdd
+bdd --> systeme : produit en promo
+deactivate bdd
+
+alt stock faible OU promotion proche
+
+    systeme -->> gestionnaire : liste produits à commander
+
+    gestionnaire -> systeme : valider_commande(liste_produits)
+    systeme ->> fournisseur : envoyer_commande(liste_produits)
+    activate fournisseur
+    fournisseur -> fournisseur : verifier_disponibilite(liste_produits)
+
+    alt produits disponibles
+        fournisseur -->> systeme : info de commande validé
+        systeme -->> gestionnaire : info de commande validé
+        deactivate gestionnaire
+        deactivate systeme
+
+        /'gestionnaire ->> fournisseur : valider_commande(id)'/
+        fournisseur -> fournisseur : preparer_commande(liste_produits)
+        fournisseur ->> gestionnaire : livrer_commande(id)
+        activate gestionnaire
+
+        gestionnaire -> systeme : update_stock(liste_produits)
+        activate systeme
+        systeme -> bdd : update_stock(liste_produits)
+
+        activate bdd
+        bdd --> systeme : confirmation update
+        deactivate bdd
+        systeme --> gestionnaire : confirmation update
+        deactivate systeme
+
+
+        gestionnaire --> fournisseur : confirmer récéption livraison
+
+        fournisseur -> gestionnaire : envoyer_bon_livraison()
+        gestionnaire --> fournisseur : bon signé
+        deactivate gestionnaire
+
+        /'Facturation'/
+        fournisseur ->> comptable : envoyer_facture()
+
+        activate comptable
+        comptable ->> systeme : enregistrer_facture()
+        activate systeme
+        systeme -> bdd : enregistrer_facture()
+        activate bdd
+        bdd --> systeme : enregistrement OK
+        systeme -->> comptable : enregistrement OK
+        deactivate bdd
+        deactivate systeme
+
+        comptable -->> fournisseur : facture reçue
+        comptable -> fournisseur : effectuer_paiement()
+        fournisseur --> comptable : confirmer paiement
+        deactivate comptable
+
+    else produits indisponibles
+        fournisseur --> systeme : produits indisponible
+        deactivate fournisseur
+        activate systeme         /'activation car activer avant alt'/
+        activate gestionnaire /'activation car activer avant alt'/
+        systeme --> gestionnaire : informer produits indisponibles
+        deactivate systeme
+        deactivate gestionnaire
+    end
+else aucun produit à commander
+
+    activate systeme
+    activate gestionnaire
+    systeme --> gestionnaire : rien a commander
+    deactivate gestionnaire
+    deactivate systeme
+
+
+end
+
+@enduml

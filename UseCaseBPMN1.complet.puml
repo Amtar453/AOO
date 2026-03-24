@@ -1,0 +1,105 @@
+@startuml
+skinparam skin rose
+skinparam usecase {
+  BackgroundColor #FEFEFE
+  BorderColor #999999
+  ArrowColor #666666
+  ActorBorderColor #555555
+}
+skinparam rectangle {
+  BorderColor #888888
+  BackgroundColor #FFFFF0
+}
+
+left to right direction
+
+' ─────────────────────────────────────────
+' Acteurs
+' ─────────────────────────────────────────
+actor "Responsable des ventes"  as RV
+actor "Chef Traiteur"           as CT
+actor "Gestionnaire de stocks"  as GS
+actor "Cuisinier"               as CU
+
+' ─────────────────────────────────────────
+rectangle PlatsPréparés {
+
+  ' ── Sous-processus 1 : Planification ──
+  package "Planification" {
+    usecase "Planifier plats"                                    as U1
+    usecase "Compléter ordre prépa"                              as U2
+    usecase "Réserver les marchandises"                          as U3
+    usecase "Consulter et modifier ordre prépa (Chef Traiteur)"  as U4
+    usecase "Consulter et modifier ordre prépa (Resp. ventes)"   as U5
+  }
+
+  ' ── Sous-processus 2 : Préparation ──
+  package "Préparation des plats" {
+    usecase "Consulter plats du jour"          as V1
+    usecase "Préparer produits"                as V2
+    usecase "Préparer plats"                   as V3
+    usecase "MAJ quantités & remarques"        as V4
+    usecase "Imprimer & coller étiquettes"     as V5
+  }
+
+  ' ── Documents système (artifacts) ──
+  package "Documents système" {
+    usecase "Catalogue de recettes"            as D1
+    usecase "Ordre prépa — Nouveau"            as D2
+    usecase "Ordre prépa — Complété"           as D3
+    usecase "Ordre prépa — Dates adaptées"     as D4
+    usecase "Ordre prépa — Quantités réelles"  as D5
+    usecase "Stock Début"                      as D6
+    usecase "Fiche des disponibilités — Nouveau"   as D7
+    usecase "Fiche des disponibilités — Consultée" as D8
+    usecase "Stocks Diminué"                   as D9
+  }
+
+  ' ─────────────────────────────────────
+  ' Relations acteurs → use cases
+  ' ─────────────────────────────────────
+  RV --> U1
+  U1 --> CT
+  CT --> U2
+  U2 --> GS
+  GS --> U3
+  U3 --> CT
+  U3 --> RV
+  CT --> U4
+  RV --> U5
+
+  CU --> V1
+  V1 --> GS
+  GS --> V2
+  V2 --> CU
+  CU --> V3
+  V3 --> V4
+  V4 --> V5
+
+  ' ─────────────────────────────────────
+  ' Relations include / extend
+  ' ─────────────────────────────────────
+  ' Planification
+  U1 ..> D1 : <<include>>
+  U1 ..> D2 : <<extend>>
+  U2 ..> D2 : <<include>>
+  U2 ..> D3 : <<extend>>
+  U3 ..> D6 : <<include>>
+  U3 ..> D7 : <<extend>>
+  U3 ..> D3 : <<include>>
+  U4 ..> D3 : <<include>>
+  U4 ..> D8 : <<include>>
+  U4 ..> D4 : <<extend>>
+  U5 ..> D8 : <<include>>
+  U5 ..> D3 : <<include>>
+
+  ' Préparation
+  V1 ..> D4 : <<include>>
+  V2 ..> D8 : <<include>>
+  V2 ..> D9 : <<extend>>
+  V4 ..> D4 : <<include>>
+  V4 ..> D5 : <<extend>>
+  V5 ..> D5 : <<include>>
+}
+
+@enduml
