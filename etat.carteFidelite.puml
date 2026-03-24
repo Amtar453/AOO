@@ -1,0 +1,13 @@
+@startuml
+
+state "Stock" as carteStock {
+     state "Stock complété" as carteAjout
+     state "Stock réduit" as carteRed
+     state "Stock" as carteNormal
+
+     carteNormal --> carteAjout : Réapprovisionnement / Augmentation du stock
+     carteNormal -> carteRed : Livraison / Réduction du stock
+     carteNormal --> carteRed : Préparation de commande / Réduction du stock
+}
+
+@enduml
