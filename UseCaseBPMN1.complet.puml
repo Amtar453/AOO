@@ -21,55 +21,55 @@ actor "Cuisinier"               as CU
 
 
 rectangle Front_end {
-(Planifier les plats) as PP
-(Préparer les produits) as PP2
-(Consulter les commandes) as CC
-(Compléter les commandes) as CC2
-(Réserver les marchandises) as RM
-(Distribuer recettes) as DR
+  (Planifier les plats) as PP
+  (Préparer les produits) as PP2
+  (Consulter les commandes) as CC
+  (Compléter les commandes) as CC2
+  (Réserver les marchandises) as RM
+  (Distribuer recettes) as DR
 
 
-RV --> PP
-RV --> CC
-CT --> CC
-CT --> DR
-GS --> RM
-GS --> PP2
-CT --> CC2
-DR --> CU
-CU --> CC
+  RV --> PP
+  RV --> CC
+  CT --> CC
+  CT --> DR
+  GS --> RM
+  GS --> PP2
+  CT --> CC2
+  DR --> CU
+  CU --> CC
 }
 
 rectangle back_end {
-(Encoder les plats) as EP
-(Consulter les préparations) as CP
-(Compléter les préparations) as CP2
-(Réserver les marchandises) as RM2
-(Vérifier disponibilité des stocks) as VDS
-(Modifier les dates) as MD
-(Ajouter remarques) as AR
-(Imprimer étiquettes) as IE
-PP --> EP
-CC --> CP
-CC2 --> CP2
-RM --> RM2
-RM2 ..> VDS : include
-CP ..> MD : extend
-CP ..> VDS : include
-CP2 ..> AR : extend
-CP ..> IE : extend
+  (Encoder les plats) as EP
+  (Consulter les préparations) as CP
+  (Compléter les préparations) as CP2
+  (Réserver les marchandises) as RM2
+  (Vérifier disponibilité des stocks) as VDS
+  (Modifier les dates) as MD
+  (Ajouter remarques) as AR
+  (Imprimer étiquettes) as IE
+  PP --> EP
+  CC --> CP
+  CC2 --> CP2
+  RM --> RM2
+  RM2 ..> VDS : include
+  CP ..> MD : extend
+  CP ..> VDS : include
+  CP2 ..> AR : extend
+  CP ..> IE : extend
 }
 
 rectangle BD {
-(Ajouter) as A
-(Modifier) as M
-(Supprimer) as S
-(Consulter) as C
-EP ..> A : extend
-CP ..> C : extend
-CP2 ..> A : extend
-CP2 ..> M : extend
-VDS ..> C : include
+  (Ajouter) as A
+  (Modifier) as M
+  (Supprimer) as S
+  (Consulter) as C
+  EP ..> A : extend
+  CP ..> C : extend
+  CP2 ..> A : extend
+  CP2 ..> M : extend
+  VDS ..> C : include
 }
 
 @enduml
