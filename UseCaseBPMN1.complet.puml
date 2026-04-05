@@ -16,7 +16,7 @@ left to right direction
 
 actor "Responsable des ventes"  as RV
 actor "Chef Traiteur"           as CT
-actor "Gestionnaire de stocks"  as GS
+actor "Gestionnaire des stocks"  as GS
 actor "Cuisinier"               as CU
 
 

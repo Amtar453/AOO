@@ -21,7 +21,7 @@ rectangle système {
     (Accéder site web magasin) as ASWM
     (Commander article) as CA
     (Payer commande) as PC
-    (Faire les courses) as FC
+    (Mise en panier : Client) as MP
     (Recevoir demande de livraison) as RDL
     (Livrer) as L
     (Signer la livraison) as SLL
@@ -29,8 +29,8 @@ rectangle système {
     C --> ASWM
     ASWM --> CA
     CA ..> PC : extend
-    M --> FC
-    FC --> RDL
+    M --> MP
+    MP --> RDL
     RDL --> SL
     SL --> L
     L ..> SLL : include
