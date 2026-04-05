@@ -22,22 +22,21 @@ actor "Cuisinier"               as CU
 
 rectangle Front_end {
   (Planifier les plats) as PP
-  (Préparer les produits) as PP2
   (Consulter les commandes) as CC
   (Compléter les commandes) as CC2
   (Réserver les marchandises) as RM
   (Distribuer recettes) as DR
-
-
+  (Imprimer étiquettes) as IE
+  (Modifier les dates) as MD
   RV --> PP
   RV --> CC
   CT --> CC
   CT --> DR
   GS --> RM
-  GS --> PP2
-  CT --> CC2
   DR --> CU
   CU --> CC
+  CT --> IE
+  CT --> MD
 }
 
 rectangle back_end {
@@ -46,18 +45,17 @@ rectangle back_end {
   (Compléter les préparations) as CP2
   (Réserver les marchandises) as RM2
   (Vérifier disponibilité des stocks) as VDS
-  (Modifier les dates) as MD
+  (Modifier les dates) as MD2
   (Ajouter remarques) as AR
-  (Imprimer étiquettes) as IE
   PP --> EP
   CC --> CP
   CC2 --> CP2
   RM --> RM2
   RM2 ..> VDS : include
-  CP ..> MD : extend
   CP ..> VDS : include
   CP2 ..> AR : extend
-  CP ..> IE : extend
+  IE ..> VDS : extend
+  MD ..> MD2 : extend
 }
 
 rectangle BD {
@@ -65,11 +63,11 @@ rectangle BD {
   (Modifier) as M
   (Supprimer) as S
   (Consulter) as C
-  EP ..> A : extend
-  CP ..> C : extend
-  CP2 ..> A : extend
-  CP2 ..> M : extend
+  EP ..> A : include
+  CP ..> C : include
+  CP2 ..> M : include
   VDS ..> C : include
+  MD2 ..> M : include
 }
 
 @enduml

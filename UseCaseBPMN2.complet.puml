@@ -16,6 +16,7 @@ left to right direction
 actor "Client" as C
 actor "Magasin" as M
 actor "Service de livraison" as SL
+
 rectangle système {
     (Accéder site web magasin) as ASWM
     (Commander article) as CA
@@ -27,7 +28,7 @@ rectangle système {
 
     C --> ASWM
     ASWM --> CA
-    CA --> PC
+    CA ..> PC : extend
     M --> FC
     FC --> RDL
     RDL --> SL
