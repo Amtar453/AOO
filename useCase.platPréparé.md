@@ -33,11 +33,13 @@ Lors de la vérifications, les différents acteurs ne trouverons aucune erreur o
 |  |  |  |  | Sauvegarder les modifications |
 |  |  |  | Informer le "chef traiteur" qu'il doit compléter l'ordre de préparation |  |
 |  | Consulter la liste du/des plat(s) à préparé(s) |  |  |  |
+|  |  |  |  | Renvoyer la liste des plat(s) préparé(s) |
 |  | Pour chaque plat ajouté: faire la liste des ingrédients, ajouter la recette et remarques, définir la date de production |  |  |  |
 |  | Sauvegarder les modifications |  |  |  |
 |  |  |  |  | Sauvegarder les modifications du fichier |
 |  | Informer le gestionnaire de stock qu'il doit regarder à la disponibilité des ingrédients |  |  |  |
 |  |  | Consulter la liste des plats à préparer |  |  |
+|  |  |  |  | Renvoyer la liste des plat(s) préparé(s) |
 |  |  | Faire la liste des ingrédients et leurs quantitées |  |  |
 |  |  |  |  | Renvoyer la liste des ingrédients avec leurs quantité |
 |  |  | Ouvrir les stocks |  |  |

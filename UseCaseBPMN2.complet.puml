@@ -1,0 +1,40 @@
+@startuml
+skin rose
+skinparam usecase {
+  BackgroundColor #FEFEFE
+  BorderColor #999999
+  ArrowColor #666666
+  ActorBorderColor #555555
+}
+skinparam rectangle {
+  BorderColor #888888
+  BackgroundColor #FFFFF0
+}
+
+left to right direction
+
+actor "Client" as C
+actor "Magasin" as M
+actor "Service de livraison" as SL
+
+rectangle système {
+    (Accéder site web magasin) as ASWM
+    (Commander article) as CA
+    (Payer commande) as PC
+    (Mise en panier : Client) as MP
+    (Recevoir demande de livraison) as RDL
+    (Livrer) as L
+    (Signer la livraison) as SLL
+
+    C --> ASWM
+    ASWM --> CA
+    CA ..> PC : extend
+    M --> MP
+    MP --> RDL
+    RDL --> SL
+    SL --> L
+    L ..> SLL : include
+}
+
+
+@enduml

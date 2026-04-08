@@ -1,0 +1,45 @@
+@startuml
+skin rose
+skinparam usecase {
+  BackgroundColor #FEFEFE
+  BorderColor #999999
+  ArrowColor #666666
+  ActorBorderColor #555555
+}
+skinparam rectangle {
+  BorderColor #888888
+  BackgroundColor #FFFFF0
+}
+
+left to right direction
+
+
+actor "Comptable" as C
+actor "Gestionnaire des stocks"  as GS
+actor "Fournisseur" as F
+
+rectangle systeme {
+    (Vérifier les stocks) as VS
+    (Vérifier les promotions) as VP
+    (Prévenir le manque de stock) as PMS
+    (Demande de réapprovisionnement des stocks) as DRS
+    (Réapprovisionner stocks avec bon de livraison) as RSBL
+    (Signer bon de livraison) as SBL
+    (Envoyer facture) as EF
+    (Payer facture avant date limite) as PFDL
+
+    GS ..> VS : extend
+    VS ..> VP : extend
+    VS ..> PMS : extend
+    PMS ..> GS : extend
+    GS --> DRS
+    DRS --> F
+    F --> RSBL
+    RSBL ..> SBL : include
+    GS ..> SBL : include
+    F --> EF
+    EF --> C
+    C --> PFDL
+}
+
+@enduml
