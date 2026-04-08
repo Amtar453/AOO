@@ -1,34 +1,55 @@
 @startuml
-
-|Client|
+|Système de payement|
+|Système|
 start
 
 split
-    :Remplir panier;
-    |Système|
-    :Panier [Nouveau]; <<task>>
+:Création du panier;
+:Panier [Nouveau]; <<task>>
 split again
-    -[hidden]->
-    (A)
-    |Système|
-    :Panier [Ajout]; <<task>>
+-[hidden]->
+(A)
 end split
 
 |Client|
-if (A fini ?) then (Yes)
+:Remplit son panier;
 
-    :Effectue le payement;
-    while (Payement refusé ?)
-        :Reéffectue le payement;
-    end while
-    :Validation de la commande;
+|Système|
+:Panier [Modifié]; <<task>>
+
+|Client|
+if (Le client a-t-il fini ?) then (Oui)
+
+    :Appuie sur le bouton "Payement"; <<output>>
+    |Système|
+    :Réception du signal "Payement"; <<input>>
+    :Panier [Complet] ; <<task>>
+    :Ouverture de la page pour le payement;
+
+    |Client|
+    :Insertion de ses informations de banque;
+    :Appelle du service de payement en ligne; <<output>>
+    |Système de payement|
+    :Réception de l'appel au service; <<input>>
+    :Envoie d'un signal de confirmation du payement; <<output>>
+
+    |Système|
+    :Réception du signal de confirmation; <<input>>
+    while (Payement accepté ?) is (Non)
+        |Client|
+        if (Le client veut réessayer le payement ?) then (Non)
+            :Panier [Suppression]; <<task>>
+            stop
+        else (Oui)
+            :Reéffectue le payement;
+
+        endif
+    end while (Oui)
 
     |Système|
     :Création d'une facture;
     : Facture \n[Nouveau]; <<task>>
 
-    |Système|
-    :Réception du panier;
     :Transformation de ce panier en bon de commande;
     :Bon de commande [Nouveau]; <<task>>
     :Envoi du bon de commande; <<output>>
@@ -45,20 +66,23 @@ if (A fini ?) then (Yes)
     :Diminution du stock par rapport au bon de commande;
     :Stock [Diminués]; <<task>>
 
-    :Création de bon de livraison;
+    :Création d'un bon de livraison;
     :Bon de livraison [Nouveau]; <<task>>
 
     |Magasinier|
     :Prévenir le service de livraison;
-    :Envoi d'un signal; <<output>>
+    :Envoi d'une notification; <<output>>
 
     |Service de livraison|
-    :Réception du signal; <<input>>
+    :Réception de la notification; <<input>>
     :S'occupe de la livraison;
 
     |Client|
     :Reçoit ses courses;
     :Signe le bon de livraison;
+
+    |Service de livraison|
+    :Notifie le système du magasin que le client a signé le bon de livraison;
 
     |Système|
     :Bon de livraison [Signé]; <<task>>
