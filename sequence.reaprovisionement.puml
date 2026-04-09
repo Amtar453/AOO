@@ -11,6 +11,7 @@ end box
 box "Site internet" #LightBlue
 entity "Système Magasin" as systeme
 database "Base de données" as bdd
+entity "Serveur mail" as mail
 end box
 
 actor "Fournisseur" as fournisseur
@@ -20,82 +21,96 @@ activate gestionnaire
 gestionnaire ->> systeme : lancer_verification_stock()
 
 activate systeme
-systeme -> bdd : verification_stock()
+systeme -> bdd : recuperer_niveaux_stock()
 
 activate bdd
-bdd --> systeme : liste produits manquant
+bdd --> systeme : liste produits + quantités
 deactivate bdd
 
-/'systeme -> systeme : comparer_quantite_au_seuil()'/
-
-systeme -> bdd : verifier_promotions()
+systeme -> systeme : analyser_seuil_stock()
+systeme -> bdd : recuperer_promotions(date)
 activate bdd
-bdd --> systeme : produit en promo
+bdd --> systeme : promotions actuelles
 deactivate bdd
+systeme -> systeme : croiser_stock_et_promotions()
 
-alt stock faible OU promotion proche
+alt stock < seuil OU promotion_active
 
     systeme -->> gestionnaire : liste produits à commander
+    gestionnaire -> systeme : verifier_commande()
 
-    gestionnaire -> systeme : valider_commande(liste_produits)
-    systeme ->> fournisseur : envoyer_commande(liste_produits)
-    activate fournisseur
-    fournisseur -> fournisseur : verifier_disponibilite(liste_produits)
+    alt commande validée
+        gestionnaire -> systeme : valider_commande()
 
-    alt produits disponibles
-        fournisseur -->> systeme : info de commande validé
-        systeme -->> gestionnaire : info de commande validé
-        deactivate gestionnaire
-        deactivate systeme
+        systeme -> systeme : generer_bon_commande()
+        activate mail
+        systeme -> mail : envoyer_bon_commande(liste_produits)
+        mail --> systeme : le mail est envoyé
+        mail -> fournisseur : envoyer_bon_commande(liste_produits)
+        activate fournisseur
+        fournisseur -> fournisseur : verifier_disponibilite(liste_produits)
 
-        /'gestionnaire ->> fournisseur : valider_commande(id)'/
-        fournisseur -> fournisseur : preparer_commande(liste_produits)
-        fournisseur ->> gestionnaire : livrer_commande(id)
-        activate gestionnaire
+        alt produits disponibles
+            fournisseur -->> mail : info de commande validé
+            mail -->> systeme : info de commande validé
+            deactivate mail
+            systeme -->> gestionnaire : info de commande validé
+            deactivate gestionnaire
+            deactivate systeme
 
-        gestionnaire -> systeme : update_stock(liste_produits)
-        activate systeme
-        systeme -> bdd : update_stock(liste_produits)
+            fournisseur -> fournisseur : preparer_commande(liste_produits)
+            fournisseur ->> gestionnaire : livrer_commande(id)
+            activate gestionnaire
 
-        activate bdd
-        bdd --> systeme : confirmation update
-        deactivate bdd
-        systeme --> gestionnaire : confirmation update
-        deactivate systeme
+            gestionnaire -> gestionnaire : receptionner_commande()
+            gestionnaire -> systeme : encoder_commande(liste_produits)
+            activate systeme
+            systeme -> bdd : update_stock(liste_produits)
+
+            activate bdd
+            bdd --> systeme : confirmation update
+            deactivate bdd
+            systeme --> gestionnaire : confirmation update
+            deactivate systeme
 
 
-        gestionnaire --> fournisseur : confirmer récéption livraison
+            gestionnaire --> fournisseur : confirmer récéption
 
-        fournisseur -> gestionnaire : envoyer_bon_livraison()
-        gestionnaire --> fournisseur : bon signé
-        deactivate gestionnaire
+            fournisseur -> gestionnaire : envoyer_bon_livraison()
+            gestionnaire --> fournisseur : bon signé
+            deactivate gestionnaire
 
-        /'Facturation'/
-        fournisseur ->> comptable : envoyer_facture()
+            /'Facturation'/
+            fournisseur ->> comptable : envoyer_facture()
 
-        activate comptable
-        comptable ->> systeme : enregistrer_facture()
-        activate systeme
-        systeme -> bdd : enregistrer_facture()
-        activate bdd
-        bdd --> systeme : enregistrement OK
-        systeme -->> comptable : enregistrement OK
-        deactivate bdd
-        deactivate systeme
+            activate comptable
+            comptable ->> systeme : enregistrer_facture()
+            activate systeme
+            systeme -> bdd : enregistrer_facture()
+            activate bdd
+            bdd --> systeme : enregistrement OK
+            systeme -->> comptable : enregistrement OK
+            deactivate bdd
+            deactivate systeme
 
-        comptable -->> fournisseur : facture reçue
-        comptable -> fournisseur : effectuer_paiement()
-        fournisseur --> comptable : confirmer paiement
-        deactivate comptable
+            comptable -->> fournisseur : facture reçue
+            comptable -> fournisseur : effectuer_paiement()
+            fournisseur --> comptable : confirmer paiement
+            deactivate comptable
 
-    else produits indisponibles
-        fournisseur --> systeme : produits indisponible
-        deactivate fournisseur
-        activate systeme         /'activation car activer avant alt'/
-        activate gestionnaire /'activation car activer avant alt'/
-        systeme --> gestionnaire : informer produits indisponibles
-        deactivate systeme
-        deactivate gestionnaire
+        else produits indisponibles
+            fournisseur --> mail : produits indisponible
+            deactivate fournisseur
+            activate mail
+            activate systeme
+            mail --> systeme : produits indisponible
+            deactivate mail
+            activate gestionnaire
+            systeme --> gestionnaire : notification indisponibilite
+        end
+    else commande refusée
+        gestionnaire -> systeme : refuser_commande()
+        systeme --> gestionnaire : confirmation_refus
     end
 else aucun produit à commander
 
