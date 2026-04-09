@@ -3,13 +3,17 @@
 skin rose
 /'skinparam sequenceMessageAlign center'/
 
+box "Magasin physique" #LightGreen
+actor "Comptable" as comptable
 actor "Gestionnaire de stock" as gestionnaire
+end box
+
+box "Site internet" #LightBlue
 entity "Système Magasin" as systeme
 database "Base de données" as bdd
-actor "Fournisseur" as fournisseur
-actor "Comptable" as comptable
+end box
 
-/'verification des stock'/
+actor "Fournisseur" as fournisseur
 
 /' Vérification des stocks '/
 activate gestionnaire
