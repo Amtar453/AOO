@@ -20,21 +20,20 @@ start
 :Ordre de préparation [Nouveau]; <<task>>
 
 |Responsable des ventes|
-repeat
-    :Choisir un plat;
+repeat :Choisir un plat;
     :Ajouter le plats;
 repeat while (liste complète?)
 :Ordre de préparation [complèter]; <<task>>
 
 |Chef Traiteur|
 repeat :Consulter la liste des plats préparé(s);
-:Ajouter la liste des ingrédients;
-:Ajouter la recette;
-if (Commentaire a ajouté ?) then (oui)
-    :Ajouter des commentaires;
-else (non)
-endif
-:définir la date de production;
+    :Ajouter la liste des ingrédients;
+    :Ajouter la recette;
+    if (Commentaire a ajouté ?) then (oui)
+        :Ajouter des commentaires;
+    else (non)
+    endif
+    :définir la date de production;
 
 repeat while (liste complète?)
 
