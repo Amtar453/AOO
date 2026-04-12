@@ -4,6 +4,7 @@
 start
 
 split
+:Affichage du catalogue des produits disponibles;
 :Création du panier;
 :Panier [Nouveau]; <<task>>
 split again
@@ -12,7 +13,7 @@ split again
 end split
 
 |Client|
-:Remplit son panier;
+:Ajouter articles;
 
 |Système|
 :Panier [Modifié]; <<task>>
@@ -20,17 +21,16 @@ end split
 |Client|
 if (Le client a-t-il fini ?) then (Oui)
 
-    :Appuie sur le bouton "Payement"; <<output>>
+    :Confirmation du panier;
     |Système|
-    :Réception du signal "Payement"; <<input>>
     :Panier [Complet] ; <<task>>
-    :Ouverture de la page pour le payement;
+    :Appel du service de payement en ligne; <<output>>
 
-    |Client|
-    :Insertion de ses informations de banque;
-    :Appelle du service de payement en ligne; <<output>>
     |Système de payement|
     :Réception de l'appel au service; <<input>>
+    :Ouverture de la page de payement;
+    |Client|
+    :Insertion de ses informations de banque;
     :Envoie d'un signal de confirmation du payement; <<output>>
 
     |Système|

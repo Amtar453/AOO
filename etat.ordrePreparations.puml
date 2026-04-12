@@ -6,11 +6,11 @@ state "Ordre de préparations" as carteOrdre {
         carteNotFull : Ajouter listes des ingrédients
         carteNotFull : Ajouter des remarques
         carteNotFull : Ajouter date de production
-        carteNotFull : Ajouter la recett
+        carteNotFull : Ajouter la recette
     state "Complet" as carteFull
-    state "Dates adaptés" as carteDates
+    state "Dates ajustées" as carteDates
     state "Annulé" as carteNull
-    state "Quantités réelles" as carteQuant : Ajouter une remarque
+    state "Quantités réelles ajustées" as carteQuant : Ajouter une remarque
 
     state cAdaptation <<choice>>
 
@@ -23,11 +23,13 @@ state "Ordre de préparations" as carteOrdre {
     carteFull --> cAdaptation : Vérification du stock
 
     cAdaptation --> carteDates : Pas assez de stocks \n [Stock insuffisant] / Dates modifiées
-    cAdaptation -left-> carteQuant : Encodage des quantités réelles produites \n [Stock suffisant]
-    cAdaptation --> carteNull : Plus de stocks [Stock nul] \n / Ordre de préparations annulé
+    cAdaptation -left-> carteQuant : Ajustement des quantités produites \n [Stock suffisant]
+    cAdaptation --> carteNull : Plus de stocks [Stock temporairement indisponible] \n / Ordre de préparations annulé
 
-    carteDates -> carteQuant : Encodage des quantités réelles produites
+    carteDates -> cAdaptation : ???
 
+    carteQuant -left-> [*]
+    carteNull -> [*] : Annulation de l'ordre de préparations
 }
 
 @enduml
