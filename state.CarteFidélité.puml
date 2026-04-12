@@ -2,6 +2,7 @@
 state "Carte de fidélité" as chest <<state>>{
     state choice1 <<choice>>
     state choice2 <<choice>>
+
     state "Nouveau" as nouv
     nouv: entry/completer les informations
     nouv: exit/assigner la carte à un compte client
@@ -16,20 +17,22 @@ state "Carte de fidélité" as chest <<state>>{
     ptret: entry/appliquer  la réduction
     ptret: exit/retirer les points à la carte
     
-    state "Point modifié" as ptmod
+    state "Point mise à jour" as ptmod
 
     state "Cloturé" as clot
     clot: entry/cloturer la carte
     clot: exit/cloturer le compte
 
-    [*] --> choice1 :go [création de la carte]
+    [*] --> choice1 :go création de la carte
     choice1 --> nouv :[création carte]
     choice1 --> asso :création ticket [else]
     nouv ---> asso :création d'un ticket
-    asso --> choice2 :go/[?]
-    choice2 --> ptret :application de la réduction
+
+    asso --> choice2 :demande utilisation points
+    choice2 --> ptret :utilisation points
     choice2 ---> ptajout :ajout des points [else]
     ptret ---> ptajout :ajout des points
+
     ptajout --> ptmod
     ptmod ---> asso :création d'un nouveau ticket
     ptmod --> clot :demande de suppression du compte
