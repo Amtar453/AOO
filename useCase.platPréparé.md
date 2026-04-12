@@ -59,7 +59,8 @@ Lors de la vérifications, les différents acteurs ne trouverons aucune erreur o
 | Rencontrer le Chef traiteur et se mettre d'accord sur les nouvelles dates ou plats si besoin en fonction de la disponibilité des ingrédients |  |  |  |  |
 | Informer le Responsable des stocks que tous est finalisé et les produits indisponible sont attendu à la date fixé pour la préparation des plats |  |  |  |  | 
 | ***Lorsque la date de la préparation d'un des plats du fichier "Ordre de préparation"*** |
-| Consulter les plats du jours à préparer |  |  |  |  |
+|  | Consulter les plats du jours à préparer |  |  |  |
+|  | Répartir les différents plats à préparer entre les cuisinier |  |  |  |
 |  |  |  |  | Renvoyer la liste des "plats préparer" |
 | Consulter la liste des ingrédients nécéssaire |  |  |  |  |
 | Aller chercher les ingrédients dans les stocks |  |  |  |  | 
