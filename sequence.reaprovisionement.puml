@@ -17,10 +17,9 @@ end box
 actor "Fournisseur" as fournisseur
 
 /' Verification des stocks '/
-activate gestionnaire
-gestionnaire ->> systeme : demarrer_verification_stock()
-
 activate systeme
+systeme ->> systeme : verification_automatique_stock()
+
 systeme -> bdd : lire_niveaux_stock()
 
 activate bdd
@@ -35,19 +34,19 @@ deactivate bdd
 systeme -> systeme : croiser_stock_et_promotions()
 
 alt stock < seuil OU promotion_active
-
-    systeme -->> gestionnaire : liste_produits_à_commander
+    activate gestionnaire
+    systeme -> gestionnaire : notification_produits_à_commander()
+    gestionnaire --> systeme : consultation notification
 
     alt commande validee
-
         gestionnaire ->> systeme : valider_commande()
 
         systeme -> systeme : generer_bon_commande()
         activate mail
-        systeme -> mail : transmettre_commande(liste_produits)
-        mail --> systeme :  confirmation_envoi
-        mail -> fournisseur : transmettre_commande(liste_produits)
+        systeme -> mail : transmettre_bon_commande(liste_produits)
         activate fournisseur
+        mail ->> fournisseur : transmettre_commande(liste_produits)
+        mail -->> systeme :  confirmation_envoi
         fournisseur -> fournisseur : verifier_disponibilite(liste_produits)
 
         alt produits disponibles
@@ -63,6 +62,10 @@ alt stock < seuil OU promotion_active
             activate gestionnaire
 
             gestionnaire -> gestionnaire : receptionner_commande()
+            gestionnaire -->> fournisseur : confirmer_réception
+            fournisseur -> fournisseur : creer_bon_livraison()
+            fournisseur -> gestionnaire : demander_signature_bon()
+            gestionnaire --> fournisseur : bon signé
             gestionnaire -> systeme : encoder_commande(liste_produits)
             activate systeme
             systeme -> bdd : mettre_a_jour_stock(liste_produits)
@@ -73,12 +76,6 @@ alt stock < seuil OU promotion_active
             systeme --> gestionnaire : confirmation_mise_à_jour
             deactivate systeme
 
-
-            gestionnaire -->> fournisseur : confirmer_réception
-
-            fournisseur -> fournisseur : creer_bon_livraison()
-            fournisseur -> gestionnaire : envoyer_bon_de_livraison()
-            gestionnaire --> fournisseur : bon signé
             deactivate gestionnaire
 
             /'Facturation'/
@@ -112,16 +109,9 @@ alt stock < seuil OU promotion_active
     else commande refusee
         gestionnaire -> systeme : refuser_commande()
         systeme --> gestionnaire : confirmation_refus
+        deactivate gestionnaire
+        deactivate systeme
     end
-else aucun produit à commander
-
-    activate systeme
-    activate gestionnaire
-    systeme --> gestionnaire : aucun_reapprovisionnement
-    deactivate gestionnaire
-    deactivate systeme
-
-
 end
 
 @enduml

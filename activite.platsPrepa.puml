@@ -39,7 +39,7 @@ repeat while (Tous les plats ont été ajoutés à l'ordre ?)
 |Système|
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation [Terminé];
+    :Ordre de préparation [Complété];
 else (non)
     :Refuser l'accès;
     stop
@@ -58,7 +58,7 @@ repeat while (liste complète ?)
 
 |Système|
 :Sauvegarde du fichier;
-:Ordre de préparation [Terminé]; <<task>>
+:Ordre de préparation [Complété]; <<task>>
 
 |Chef Traiteur|
 :Demander au gestionnaire la vérification des stocks;
@@ -69,7 +69,7 @@ repeat while (liste complète ?)
 |Système|
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation [Terminé];
+    :Ordre de préparation [Complété];
 else (non)
     :Refuser l'accès;
     stop
@@ -84,12 +84,8 @@ repeat :Consulter l'ordre de préparation;
     |Gestionnaire Stock|
 repeat while (Toutes les recettes parcourues ?)
 :Consulter les stocks;
-
-|Système|
 :Réserver les marchandises pour la date de production;
-
-|Gestionnaire Stock|
-:Compléter la fiche des disponibilités avec les quantités réelles;
+:Créer la fiche des disponibilités avec les quantités réservés;
 
 |Système|
 :Création du fichier "fiche des disponibilités";
@@ -178,10 +174,10 @@ endif
 
 |Cuisinier|
 :Imprimer les étiquettes;
-:Poser les étiquettes sur les plats;<<sendSignal>>
+:Poser les étiquettes sur les plats;
 
 |Gestionnaire Stock|
-:Rangement des plats au frais;<<trigger>>
+:Rangement des plats au frais;
 
 |Cuisinier|
 if (Reste-t-il des plats à cuisiner ?) then (non)
