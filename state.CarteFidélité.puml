@@ -1,8 +1,9 @@
 @startuml
-state "Carte de fiélité" as chest <<state>>{
-    state choice <<choice>>
+state "Carte de fidélité" as chest <<state>>{
+    state choice1 <<choice>>
+    state choice2 <<choice>>
     state "Nouveau" as nouv
-    nouv: entry/créer la carte de fidélité
+    nouv: entry/completer les informations
     nouv: exit/assigner la carte à un compte client
 
     state "Associé" as asso
@@ -12,25 +13,26 @@ state "Carte de fiélité" as chest <<state>>{
     ptajout: exit/ajouter les points à la carte
 
     state "Point retiré" as ptret
+    ptret: entry/appliquer  la réduction
     ptret: exit/retirer les points à la carte
     
     state "Point modifié" as ptmod
 
     state "Cloturé" as clot
-    clot: entry/demander cloture du compte
-    clot: go/cloturer la carte
+    clot: entry/cloturer la carte
     clot: exit/cloturer le compte
 
-    [*] --> choice: go/Créer
-    choice --> nouv :[création carte]
-    choice --> asso :[else]
-    nouv --> asso
-    asso --> ptajout
-    asso --> ptret
-    ptret --> ptajout
+    [*] --> choice1 :go [création de la carte]
+    choice1 --> nouv :[création carte]
+    choice1 --> asso :création ticket [else]
+    nouv ---> asso :création d'un ticket
+    asso --> choice2 :go/[?]
+    choice2 --> ptret :application de la réduction
+    choice2 ---> ptajout :ajout des points [else]
+    ptret ---> ptajout :ajout des points
     ptajout --> ptmod
-    ptmod --> asso
-    ptmod --> clot
+    ptmod ---> asso :création d'un nouveau ticket
+    ptmod --> clot :demande de suppression du compte
     clot --> [*]
 
 }
