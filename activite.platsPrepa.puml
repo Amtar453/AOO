@@ -7,17 +7,12 @@ start
 
 |Système|
 :Vérifier les droits d'accès;
-if (Droits valides ?) then (oui)
-    :Envoyer les recettes;
-    :Catalogue des recettes [complet]; <<task>>
-else (non)
-    :Refuser l'accès;
-    stop
-endif
+:Envoyer les recettes;
+:Catalogue des recettes [complet]; <<task>>
 
 |Responsable des ventes|
 :Consulter les recettes;
-:Créer l'ordre de préparation;
+:Créer ordre de préparation;
 
 |Système|
 :Création d'un ordre de préparation;
@@ -25,166 +20,115 @@ endif
 :Ordre de préparation [Nouveau]; <<task>>
 
 |Responsable des ventes|
-repeat :Choisir un plat;
-    :Ajouter le plat;
-    |Système|
-    :Sauvegarde du fichier;
-    :Ordre de préparation [Sauvegardé]; <<task>>
-repeat while (Tous les plats ont été ajoutés à l'ordre ?)
-
+repeat
+    :Choisir un plat;
+    :Ajouter le plats;
+repeat while (liste complète?)
+:Ordre de préparation [complèter]; <<task>>
 
 |Chef Traiteur|
-:Demander l'ordre de préparation;
-
-|Système|
-:Vérifier les droits d'accès;
-if (Droits valides ?) then (oui)
-    :Ordre de préparation [Terminé];
+repeat :Consulter la liste des plats préparé(s);
+:Ajouter la liste des ingrédients;
+:Ajouter la recette;
+if (Commentaire a ajouté ?) then (oui)
+    :Ajouter des commentaires;
 else (non)
-    :Refuser l'accès;
-    stop
 endif
+:définir la date de production;
 
-|Chef Traiteur|
-repeat :Consulter l'ordre de préparation;
-    :Ajouter la liste des ingrédients;
-    :Ajouter la recette;
-    if (Commentaire à ajouter ?) then (oui)
-        :Ajouter des commentaires;
-    else (non)
-    endif
-    :Définir la date de production du plat;
-repeat while (liste complète ?)
+repeat while (liste complète?)
 
 |Système|
 :Sauvegarde du fichier;
-:Ordre de préparation [Terminé]; <<task>>
+:Ordre de préparation [Terminer]; <<task>>
 
 |Chef Traiteur|
 :Demander au gestionnaire la vérification des stocks;
 
 |Gestionnaire Stock|
-:Demander l'ordre de préparation;
-
-|Système|
-:Vérifier les droits d'accès;
-if (Droits valides ?) then (oui)
-    :Ordre de préparation [Terminé];
-else (non)
-    :Refuser l'accès;
-    stop
-endif
-
-|Gestionnaire Stock|
-repeat :Consulter l'ordre de préparation;
-    :Établir la liste des ingrédients;
-    :Déterminer les quantités d'ingrédients;
-    |Système|
-    :Calculer les disponibilités en fonction des stocks;
-    |Gestionnaire Stock|
-repeat while (Toutes les recettes parcourues ?)
+repeat :Consulter la liste des plats préparé(s);
+:Faire la liste des ingrédients;
+:Faire les quantités des ingrédients;
+repeat while (liste parcourue?)
 :Consulter les stocks;
 
 |Système|
-:Réserver les marchandises pour la date de production;
+:Calculer les disponibilités;
+:Marquer les produits comme "réservé";
 
 |Gestionnaire Stock|
-:Compléter la fiche des disponibilités avec les quantités réelles;
+:Créer le fichier "fiche des disponibilités";
 
 |Système|
-:Création du fichier "fiche des disponibilités";
+:Créer le fichier "fiche des disponibilités";
 :Changement des droits d'accès;
 :Fiche des disponibilités [Nouveau]; <<task>>
-:Fiche prête;<<sendSignal>>
-'message pour signaler qu’ils peuvent commencer la review
+
 |Système|
 fork
     |Responsable des ventes|
-    :Consulter la fiche des disponibilités;<<trigger>>
+    :Consulter la fiche des disponibilités;
     :Choisir les dates de ventes;
-    :Adapter les dates de production;
     :Valider l'ordre de préparation;
 
 fork again
     |Chef Traiteur|
-    :Consulter la fiche des disponibilités;<<trigger>>
+    :Consulter la fiche des disponibilités;
     :Choisir les dates de ventes;
     :Adapter les dates de production;
-    :Attribuer les plats aux cuisiniers;
-    :Valider l'ordre de préparation;
 
     |Système|
 end fork
-
-:Vérifier les droits d'accès;
-if (Droits valides ?) then (oui)
-    :Ordre de préparation [Validé];
-else (non)
-    :Refuser l'accès;
-    stop
-endif
+:Ordre de préparation [Validé]; <<task>>
 
 |Cuisinier|
 split
     :Attente de date de production; <<timeEvent>>
+    :Consulter les plats du jour;
+
 split again
     -[hidden]->
     (A)
+    :Consulter les plats restant;
 end split
 
-:Demander la liste les plats restant à faire;
+repeat :Consulter les plats du jour;
 
 |Système|
-:Vérifier les droits d'accès;
-if (Droits valides ?) then (oui)
-    :Ordre de préparation \n[Attribué au Cuisinier]; <<task>>
-else (non)
-    :Refuser l'accès;
-    stop
-endif
-
-|Cuisinier|
-:Demander la liste des ingrédients;
-
-|Système|
-:Liste des ingrédients [Validée]; <<task>>
+:Ordre de préparation [Validé]; <<task>>
 
 |Cuisinier|
 :Consulter la liste des ingrédients;
-:Aller chercher les ingrédients;
 
-|Gestionnaire Stock|
-:Consulter la liste des ingrédients;
-:Donne les ingrédients;
+|Système|
+:Liste des ingrédients [Validé]; <<task>>
 
 |Cuisinier|
 :Préparer les ingrédients;
 
+|Système|
+:Mise à jour des stocks;
+
 |Cuisinier|
 :Préparer les plats;
 :Encoder quantités réellement produites;
-if (Remarque à ajouter ?) then (oui)
-    :Ajouter remarque;
-else (non)
-endif
 
 |Système|
-:Mise à jour des stocks avec les quantités réellement utilisées;
 :Mise à jour de l'ordre de préparation;
 :Ordre de préparation [Mis à jour]; <<task>>
 
-:Génération des étiquettes \navec DLC, prix, ingrédients;
+:Génération des étiquettes;
 :Étiquettes [Nouvelles]; <<task>>
 
 |Cuisinier|
 :Imprimer les étiquettes;
-:Poser les étiquettes sur les plats;<<sendSignal>>
+:Coller les étiquettes sur les plats;
 
 |Gestionnaire Stock|
-:Rangement des plats au frais;<<trigger>>
+:Rangement des plats au frais;
 
 |Cuisinier|
-if (Reste-t-il des plats à cuisiner ?) then (non)
+if (Reste t'il des plats a cuisiner ?) then (non)
     stop
 else (oui)
     (A)
