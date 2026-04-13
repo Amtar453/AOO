@@ -1,5 +1,6 @@
 @startuml
-|Système de payement|
+skin rose
+|Banque du magasin|
 |Système|
 start
 
@@ -24,27 +25,37 @@ if (Le client a-t-il fini ?) then (Oui)
     :Confirmation du panier;
     |Système|
     :Panier [Complet] ; <<task>>
-    :Appel du service de payement en ligne; <<output>>
 
-    |Système de payement|
-    :Réception de l'appel au service; <<input>>
-    :Ouverture de la page de payement;
     |Client|
-    :Insertion de ses informations de banque;
-    :Envoie d'un signal de confirmation du payement; <<output>>
+    :Payement de la commande;
 
-    |Système|
-    :Réception du signal de confirmation; <<input>>
+    |Banque du magasin|
     while (Payement accepté ?) is (Non)
+        :Envoie d'un signal de refus du payement; <<output>>
         |Client|
+        :Réception du signal de refus; <<input>>
         if (Le client veut réessayer le payement ?) then (Non)
+            |Banque du magasin|
+            :Annulation du payement;
+            |Système|
             :Panier [Suppression]; <<task>>
             stop
         else (Oui)
+            |Client|
             :Reéffectue le payement;
-
         endif
     end while (Oui)
+
+    |Banque du magasin|
+    :Envoie d'un signal de confirmation du payement; <<output>>
+
+    fork
+    |Système|
+    :Réception du signal de confirmation; <<input>>
+    fork again
+    |Client|
+    :Réception du signal de confirmation; <<input>>
+    end fork
 
     |Système|
     :Création d'une facture;

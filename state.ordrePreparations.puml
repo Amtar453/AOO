@@ -1,35 +1,27 @@
 @startuml
 
-state "Ordre de préparations" as carteOrdre {
-    state "Nouveau" as carteNew
+ state "Nouveau" as carteNew
     state "Incomplet" as carteNotFull
-        carteNotFull : Ajouter listes des ingrédients
-        carteNotFull : Ajouter des remarques
-        carteNotFull : Ajouter date de production
-        carteNotFull : Ajouter la recette
     state "Complet" as carteFull
-    state "Dates ajustées" as carteDates
-    state "Annulé" as carteNull
-    state "Quantités réelles ajustées" as carteQuant : Ajouter une remarque
+    state "Date ajustée" as carteDates
+    state "Annulé" as carteCancel
+    state "Quantités réelles ajustées" as carteQuant : exit/ ajouter une remarque
 
     state cAdaptation <<choice>>
 
     [*] -> carteNew
-
     carteNew -> carteNotFull : Choix des plats à préparer \n plusieurs semaines à l'avance
+    carteNotFull -> carteFull : Complétion de l'ordre de préparations
 
-    carteNotFull -> carteFull : Complétion des infos manquantes
+    carteFull -down-> cAdaptation : Vérification du stock
+    cAdaptation -> carteDates : [Stock insuffisant] / Ajustement de la date
+    carteDates -left> carteFull : fein
 
-    carteFull --> cAdaptation : Vérification du stock
+    cAdaptation --> carteCancel : [Stock insuffisant AND date inajustable] / Annulation de l'ordre de préparations
+    carteCancel -> [*] : Suppression de l'ordre de préparations
 
-    cAdaptation --> carteDates : Pas assez de stocks \n [Stock insuffisant] / Dates modifiées
-    cAdaptation -left-> carteQuant : Ajustement des quantités produites \n [Stock suffisant]
-    cAdaptation --> carteNull : Plus de stocks [Stock temporairement indisponible] \n / Ordre de préparations annulé
-
-    carteDates -> cAdaptation : ???
+    cAdaptation -left-> carteQuant : [Stock suffisant] / \nAjustement des quantités produites
 
     carteQuant -left-> [*]
-    carteNull -> [*] : Annulation de l'ordre de préparations
-}
 
 @enduml

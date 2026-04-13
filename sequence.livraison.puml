@@ -1,4 +1,4 @@
-@startuml 
+@startuml
 skin rose 
 
 actor "Client" as client
