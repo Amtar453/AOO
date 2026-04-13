@@ -1,9 +1,9 @@
 @startuml
 
- state "Nouveau" as carteNew
+    state "Nouveau" as carteNew
     state "Incomplet" as carteNotFull
     state "Complet" as carteFull
-    state "Date ajustée" as carteDates
+'    state "Date recalée" as carteDates
     state "Annulé" as carteCancel
     state "Quantités réelles ajustées" as carteQuant : exit/ ajouter une remarque
 
@@ -13,9 +13,8 @@
     carteNew -> carteNotFull : Choix des plats à préparer \n plusieurs semaines à l'avance
     carteNotFull -> carteFull : Complétion de l'ordre de préparations
 
-    carteFull -down-> cAdaptation : Vérification du stock
-    cAdaptation -> carteDates : [Stock insuffisant] / Ajustement de la date
-    carteDates -left> carteFull : fein
+    carteFull --> cAdaptation : Vérification du stock
+    cAdaptation -left> carteFull : [Stock insuffisant] / Recalage de la date
 
     cAdaptation --> carteCancel : [Stock insuffisant AND date inajustable] / Annulation de l'ordre de préparations
     carteCancel -> [*] : Suppression de l'ordre de préparations
