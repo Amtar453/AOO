@@ -1,4 +1,5 @@
 @startuml
+skin rose
 state choice <<choice>>
 
 state "Nouveau" as nouv
@@ -22,12 +23,12 @@ clot: exit/cloturer le compte
 [*] -right-> nouv :création de la carte
 nouv --> asso :création d'un ticket
 
-asso --> choice :demande au client si utilisation des points
+asso ---> choice :demande au client si utilisation des points
 choice --> ptret :[utilisation points]
 choice --> ptajout :[else]
-ptret --> ptajout :ajout des points
+ptret ---> ptajout :validation payement ticket
 
-ptajout --> asso :création d'un nouveau ticket
+ptajout -----> asso :création d'un nouveau ticket
 ptajout --> clot :demande de suppression du compte
 clot --> [*]
 @enduml
