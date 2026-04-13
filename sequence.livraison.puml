@@ -62,10 +62,11 @@ loop "Le client souhaite ajouter plus d'articles dans son panier"
 end loop 
 
 client->>front:"Commander le panier"
-
-back->bank:"Redirect('bank', card.total, store.IBAN)"
+front->>back:"Request_payement"
+back->>bank:"Redirect('bank', card.total, store.IBAN)"
 activate bank
 bank-->back:"Payement éffectué"
+back-->front
 deactivate bank
 
 front->>back:"validate_command(cart)"
