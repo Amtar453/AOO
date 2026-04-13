@@ -47,8 +47,7 @@ endif
 
 |Chef Traiteur|
 repeat :Consulter l'ordre de préparation;
-    :Ajouter la liste des ingrédients;
-    :Ajouter la recette;
+    :Ajouter la liste des ingrédients a la recette;
     if (Commentaire à ajouter ?) then (oui)
         :Ajouter des commentaires;
     else (non)
@@ -83,7 +82,6 @@ repeat :Consulter l'ordre de préparation;
     :Calculer les disponibilités en fonction des stocks;
     |Gestionnaire Stock|
 repeat while (Toutes les recettes parcourues ?)
-:Consulter les stocks;
 :Réserver les marchandises pour la date de production;
 :Créer la fiche des disponibilités avec les quantités réservés;
 
@@ -138,12 +136,6 @@ else (non)
     :Refuser l'accès;
     stop
 endif
-
-|Cuisinier|
-:Demander la liste des ingrédients;
-
-|Système|
-:Liste des ingrédients [Validée]; <<task>>
 
 |Cuisinier|
 :Consulter la liste des ingrédients;
