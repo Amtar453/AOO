@@ -1,40 +1,33 @@
 @startuml
-state "Carte de fidélité" as chest <<state>>{
+state choice <<choice>>
 
-    state choice <<choice>>
+state "Nouveau" as nouv
+nouv: entry/completer les informations
+nouv: exit/assigner la carte à un compte client
 
-    state "Nouveau" as nouv
-    nouv: entry/completer les informations
-    nouv: exit/assigner la carte à un compte client
+state "Associé" as asso
+asso: entry/associer la carte à un ticket
 
-    state "Associé" as asso
-    asso: exit/associer la carte à un ticket
+state "Point ajouté" as ptajout
+ptajout: entry/ajouter les points à la carte
 
-    state "Point ajouté" as ptajout
-    ptajout: exit/ajouter les points à la carte
+state "Point retiré" as ptret
+ptret: entry/retirer les points à la carte
+ptret: exit/appliquer  la réduction
 
-    state "Point retiré" as ptret
-    ptret: entry/appliquer  la réduction
-    ptret: exit/retirer les points à la carte
-    
-    state "Point mise à jour" as ptmod
+state "Cloturé" as clot
+clot: entry/cloturer la carte
+clot: exit/cloturer le compte
 
-    state "Cloturé" as clot
-    clot: entry/cloturer la carte
-    clot: exit/cloturer le compte
+[*] -right-> nouv :création de la carte
+nouv --> asso :création d'un ticket
 
-    [*] --> nouv :création de la carte
-    nouv --> asso :création d'un ticket
+asso --> choice :demande au client si utilisation des points
+choice --> ptret :[utilisation points]
+choice --> ptajout :[else]
+ptret --> ptajout :ajout des points
 
-    asso --> choice :demande utilisation points
-    choice --> ptret :utilisation points
-    choice --> ptajout :ajout des points [else]
-    ptret --> ptajout :ajout des points
-
-    ptajout --> ptmod
-    ptmod --> asso :création d'un nouveau ticket
-    ptmod --> clot :demande de suppression du compte
-    clot --> [*]
-
-}
+ptajout --> asso :création d'un nouveau ticket
+ptajout --> clot :demande de suppression du compte
+clot --> [*]
 @enduml
