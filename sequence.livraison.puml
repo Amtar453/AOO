@@ -6,8 +6,7 @@ actor "Client" as client
 box "Site internet" #LightBlue
 entity "Frontend" as front
 entity "Serveur backend" as back
-database "Serveur Base de donnée" as bd 
-entity "Serveur mail" as mail
+database "Serveur Base de donnée" as bd
 end box
 
 box "Magasin physique" #LightGreen
@@ -15,6 +14,11 @@ actor "Magasinier" as magasinier
 actor "Responsable livraison" as livraison
 actor "Livreur" as livreur
 end box 
+
+box "Services web"  #LightSalmon
+entity "Serveur mail" as mail
+entity "Banque du magasin" as bank
+end box
 
 client->front:"requette page d'acceuil"
 activate client
@@ -59,12 +63,10 @@ end loop
 
 client->>front:"Commander le panier"
 
-loop "payement en attente"
-    front->client:"Demander les informations banquaires"
-    client-->front
-    front->back:"validate_payement(bank_informations)"
-    back-->front
-end loop 
+back->bank:"Redirect('bank', card.total, store.IBAN)"
+activate bank
+bank-->back:"Payement éffectué"
+deactivate bank
 
 front->>back:"validate_command(cart)"
 
@@ -100,6 +102,7 @@ deactivate bd
 == "1 jour avant la livraison" ==
 
 mail->magasinier:"Le mail arrive"
+magasinier-->mail
 deactivate mail  
 activate magasinier
 magasinier->>front:"Accède au bon de commande"
