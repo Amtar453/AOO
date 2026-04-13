@@ -6,6 +6,7 @@ start
 
 split
 :Affichage du catalogue des produits disponibles;
+:Catalogue des produits ; <<task>>
 :Création du panier;
 :Panier [Nouveau]; <<task>>
 split again
@@ -22,55 +23,40 @@ end split
 |Client|
 if (Le client a-t-il fini ?) then (Oui)
 
+    :Masquage du catalogue des produits;
     :Confirmation du panier;
     |Système|
     :Panier [Complet] ; <<task>>
 
     |Client|
     :Payement de la commande;
-
     |Banque du magasin|
-    while (Payement accepté ?) is (Non)
-        :Envoie d'un signal de refus du payement; <<output>>
-        |Client|
-        :Réception du signal de refus; <<input>>
-        if (Le client veut réessayer le payement ?) then (Non)
-            |Banque du magasin|
-            :Annulation du payement;
-            |Système|
-            :Panier [Suppression]; <<task>>
-            stop
-        else (Oui)
-            |Client|
-            :Reéffectue le payement;
-        endif
-    end while (Oui)
-
-    |Banque du magasin|
+    :S'occupe du payement;
     :Envoie d'un signal de confirmation du payement; <<output>>
 
-    fork
     |Système|
+    fork
     :Réception du signal de confirmation; <<input>>
     fork again
     |Client|
     :Réception du signal de confirmation; <<input>>
+    |Système|
     end fork
 
     |Système|
     :Création d'une facture;
     : Facture \n[Nouveau]; <<task>>
 
-    :Transformation de ce panier en bon de commande;
+    :Transformation du panier en bon de commande;
     :Bon de commande [Nouveau]; <<task>>
+    :1 jour ouvrable avant la date de livraison; <<timeEvent>>
     :Envoi du bon de commande; <<output>>
 
     |Magasinier|
-    :1 jour ouvrable avant la date de livraison; <<timeEvent>>
     :Reçu du bon de commande; <<input>>
 
     :Préparation de la commande;
-    :Enregistrement du bon préparé;
+    :Enregister le bon comme préparée;
 
     |Système|
     :Bon de commande [Préparée]; <<task>>
