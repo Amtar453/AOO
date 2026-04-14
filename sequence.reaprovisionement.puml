@@ -19,6 +19,8 @@ end box
 
 actor "Fournisseur" as fournisseur
 
+== Activation journalière à 1h ==
+
 /' Verification des stocks '/
 activate systeme
 systeme ->> systeme : verification_automatique_stock()
@@ -35,6 +37,8 @@ activate bdd
 bdd --> systeme : promotions_courantes
 deactivate bdd
 systeme -> systeme : croiser_stock_et_promotions()
+
+== Notification à 6h ==
 
 alt stock < seuil OU promotion_active
     activate gestionnaire
