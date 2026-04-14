@@ -11,6 +11,9 @@ end box
 box "Site internet" #LightBlue
 entity "Système Magasin" as systeme
 database "Base de donnees" as bdd
+end box
+
+box "Service web" #LightSalmon
 entity "Serveur mail" as mail
 end box
 
