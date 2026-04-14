@@ -5,13 +5,13 @@ skin rose
 start
 
 split
-:Affichage du catalogue des produits disponibles;
-:Catalogue des produits ; <<task>>
-:Création du panier;
-:Panier [Nouveau]; <<task>>
-split again
--[hidden]->
-(A)
+    :Affichage du catalogue des produits disponibles;
+    :Catalogue des produits ; <<task>>
+    :Création du panier;
+    :Panier [Nouveau]; <<task>>
+    split again
+    -[hidden]->
+    (A)
 end split
 
 |Client|
@@ -36,22 +36,21 @@ if (Le client a-t-il fini ?) then (Oui)
 
     |Système|
     fork
-    :Réception du signal de confirmation; <<input>>
-    fork again
-    |Client|
-    :Réception du signal de confirmation; <<input>>
-    |Système|
+        :Réception du signal de confirmation; <<input>>
+          :Création d'une facture;
+            : Facture \n[Nouveau]; <<task>>
+
+            :Transformation du panier en bon de commande;
+            :Bon de commande [Nouveau]; <<task>>
+        fork again
+        |Client|
+        :Réception du signal de confirmation; <<input>>
+        |Système|
     end fork
 
-    |Système|
-    :Création d'une facture;
-    : Facture \n[Nouveau]; <<task>>
-
-    :Transformation du panier en bon de commande;
-    :Bon de commande [Nouveau]; <<task>>
     :1 jour ouvrable avant la date de livraison; <<timeEvent>>
     :Envoi du bon de commande; <<output>>
-
+    
     |Magasinier|
     :Reçu du bon de commande; <<input>>
 
