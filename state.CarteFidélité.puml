@@ -16,9 +16,9 @@ state "Point retiré" as ptret
 ptret: entry/retirer les points à la carte
 ptret: exit/appliquer  la réduction
 
-state "Cloturé" as clot
-clot: entry/cloturer la carte
-clot: exit/cloturer le compte
+state "Clôturé" as clot
+clot: entry/clôturer la carte
+clot: exit/clôturer le compte
 
 [*] -right-> nouv :création de la carte
 nouv --> asso :création d'un ticket
