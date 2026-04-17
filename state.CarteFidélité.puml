@@ -24,11 +24,11 @@ clot: exit/cloturer le compte
 nouv --> asso :création d'un ticket
 
 asso ---> choice :demande au client si utilisation des points
-choice --> ptret :[utilisation points]
+choice --> ptret :[nombre de points suffisant et utilisation points]
 choice --> ptajout :[else]
 ptret ---> ptajout :validation payement ticket
 
-ptajout -----> asso :création d'un nouveau ticket
+ptajout --> asso :création d'un nouveau ticket
 ptajout --> clot :demande de suppression du compte
 clot --> [*]
 @enduml
