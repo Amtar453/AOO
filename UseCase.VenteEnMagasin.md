@@ -20,13 +20,13 @@
 |--------------------|--------------------|--------------------|
 ||Entre son identifiant et son mot de passe||
 |||Vérifie l’existence de l'identifiant|
-|||Vérifie la validité du mot du passe|
+|||Vérifie la validité du mot de passe|
 |||Affiche la page d’accueil|
 |Récupère les articles souhaité|||
 |Présente ses articles au caissier|||
-||Scanne le code barre du premier article||
+||Scanne le code-barre du premier article||
 |||Création automatique du ticket déclenché par le scanne du premier article|
-||Scanne le code barre pour le reste des articles||
+||Scanne le code-barre pour le reste des articles||
 |||Ajoute tous les articles scanné au ticket|
 ||Demande la carte de fidélité||
 |Donne la carte de fidélité|||
@@ -34,26 +34,26 @@
 ||Scanne la carte de fidélité||
 |||Lie le compte client au ticket|
 |||Affiche le nombre de points du client|
-||Demande si il veut utiliser les points de fidélité||
+||Demande s'il veut utiliser les points de fidélité||
 |Répond qu'il veut les utiliser|||
 ||Sélectionne la réduction des points de fidélité||
 |||Applique la réduction|
 |||Réduit le nombre de points pour la réduction|
-||Demande quel option de payement il veut utiliser||
+||Demande quel option de paiement il veut utiliser||
 |Répond qu'il veut utiliser la carte bancaire|||
-||Sélectionne l'option de payement||
-|||Initialise le terminal de payement|
+||Sélectionne l'option de paiement||
+|||Initialise le terminal de paiement|
 |Insert la carte bancaire dans le terminal|||
 |||Demande le code PIN|
 |Entre le code PIN|||
 |||Valide le code PIN|
 |||Appel au service bancaire avec les informations|
-|||Confirme le payement|
+|||Confirme le paiement|
 |||Ajoute les points sur la carte de fidélité|
 |Récupère sa carte bancaire|||
 |||Clôture le ticket|
-||Demande si il veut le ticket||
-|Repond qu'il veut le ticket|||
+||Demande s'il veut le ticket||
+|Répond qu'il veut le ticket|||
 ||Sélectionne l'impression du ticket de caisse||
 |||Imprime le ticket de caisse|
 ||Récupère le ticket de caisse||
