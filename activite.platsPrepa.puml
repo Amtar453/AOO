@@ -83,12 +83,19 @@ repeat :Consulter l'ordre de préparation;
     |Gestionnaire Stock|
 repeat while (Toutes les recettes parcourues ?)
 :Réserver les marchandises pour la date de production;
-:Créer la fiche des disponibilités avec les quantités réservés;
+:Créer la fiche des disponibilités;
 
 |Système|
 :Création du fichier "fiche des disponibilités";
 :Changement des droits d'accès;
 :Fiche des disponibilités [Nouveau]; <<task>>
+
+|Gestionnaire Stock|
+:Complète la fiche avec les quantités réservées;
+
+|Système|
+:Fiche des disponibilités [Complétée]; <<task>>
+
 :Fiche prête;<<sendSignal>>
 'message pour signaler qu’ils peuvent commencer la review
 |Système|
