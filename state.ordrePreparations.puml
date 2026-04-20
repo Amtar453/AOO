@@ -1,40 +1,41 @@
 @startuml
+skin rose
 
-    state "Nouveau" as carteNew
-    state "Incomplet" as carteNotFull
-    state "Complet" as carteFull
-    state "Date décalée" as carteDates
-    state "Annulé" as carteCancel
-    state "Quantités réelles ajustées" as carteQuant : exit/ ajouter une remarque
-    state "Plats infaisables" as carteDel
-    state "Remplacement" as carteReplace
+state "Nouveau" as carteNew
+state "Incomplet" as carteNotFull
+state "Complet" as carteFull
+state "Date décalée" as carteDates
+state "Annulé" as carteCancel
+state "Quantités réelles ajustées" as carteQuant : exit/ ajouter une remarque
+state "Plats infaisables" as carteDel
+state "Remplacement" as carteReplace
 
-    state cAdaptation <<choice>>
-    state cCancel <<choice>>
-    state c3 <<choice>>
+state cAdaptation <<choice>>
+state cCancel <<choice>>
+state c3 <<choice>>
 
-    [*] -> carteNew
-    carteNew -> carteNotFull : Choix des plats à préparer \n plusieurs semaines à l'avance
-    carteNotFull -> carteFull : Complétion de l'ordre de préparations
+[*] -> carteNew
+carteNew -> carteNotFull : Choix des plats à préparer \n plusieurs semaines à l'avance
+carteNotFull -> carteFull : Complétion de l'ordre de préparations
 
-    carteFull --> cAdaptation : Vérification du stock
-    cAdaptation -> carteDates : [Stock insuffisant] / Décalage de la date de production
-    carteDates -up> carteFull : Arrivée du stock
+carteFull --> cAdaptation : Vérification du stock
+cAdaptation -> carteDates : [Stock insuffisant] / Décalage de la date de production
+carteDates -up> carteFull : Arrivée du stock
 
-    cAdaptation --> c3 : [Stock insuffisant AND date inajustable] / \nPossibilité de remplacement ?
-    c3 --> carteDel : [Non] / Suppression des \nplats infaisables
-    c3 --> carteReplace : [Oui] / Remplacement des \nplats infaisables
+cAdaptation --> c3 : [Stock insuffisant AND date inajustable] / \nPossibilité de remplacement ?
+c3 --> carteDel : [Non] / Suppression des \nplats infaisables
+c3 --> carteReplace : [Oui] / Remplacement des \nplats infaisables
 
-    carteDel --> cCancel : L'ordre est-il vide ?
-    carteReplace -up> carteFull
+carteDel --> cCancel : L'ordre est-il vide ?
+carteReplace -up> carteFull
 
-    cCancel --> carteCancel : [Oui] / Annulation de l'ordre
-    cCancel -left> carteFull : [Non]
+cCancel --> carteCancel : [Oui] / Annulation de l'ordre
+cCancel -left> carteFull : [Non]
 
-    carteCancel -> [*]
+carteCancel -> [*]
 
-    cAdaptation -left-> carteQuant : [Stock suffisant] / \nAjustement des quantités produites
+cAdaptation -left-> carteQuant : [Stock suffisant] / \nAjustement des quantités produites
 
-    carteQuant -left-> [*]
+carteQuant -left-> [*]
 
 @enduml
