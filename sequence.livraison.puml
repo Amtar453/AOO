@@ -62,7 +62,7 @@ loop "Le client souhaite ajouter plus d'articles dans son panier"
 end loop 
 
 client->>front:"Commander le panier"
-front->>back:"Request_payement"
+front->back:"Request_payement"
 back->>bank:"Redirect('bank', card.total, store.IBAN)"
 activate bank
 bank-->back:"Payement éffectué"
@@ -102,10 +102,10 @@ deactivate bd
 
 == "1 jour avant la livraison" ==
 
-mail->magasinier:"Le mail arrive"
-magasinier-->mail
-deactivate mail  
+mail->magasinier:"Le mail arrive"  
 activate magasinier
+magasinier-->mail
+deactivate mail
 magasinier->>front:"Accède au bon de commande"
 activate front  
 front->>back:"get_cart(id)"
