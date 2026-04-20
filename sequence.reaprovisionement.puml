@@ -56,7 +56,15 @@ alt stock < seuil OU promotion_active
         mail -->> systeme :  confirmation_envoi
         fournisseur -> fournisseur : verifier_disponibilite(liste_produits)
 
-        alt produits disponibles
+        alt disponibilité reçue
+
+            fournisseur --> mail : info_commande
+            mail -->> systeme : info_commande
+            systeme -->> gestionnaire : afficher_fournisseurs_disponibles()
+            gestionnaire ->> systeme : choisir_fournisseur_optimal()
+            systeme ->> mail : transmettre_confirmation_commande()
+            mail ->> fournisseur : confirmation_commande
+
             fournisseur --> mail : confirmation_commande
             mail -->> systeme : confirmation_commande
             deactivate mail
