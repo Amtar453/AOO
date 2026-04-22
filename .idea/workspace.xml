@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c365d9f1-3f9e-4bb1-80bc-96f907aff244" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/activite.platsPrepa.puml" beforeDir="false" afterPath="$PROJECT_DIR$/activite.platsPrepa.puml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,6 +108,8 @@
       <workItem from="1776087494825" duration="8635000" />
       <workItem from="1776427485668" duration="286000" />
       <workItem from="1776513896859" duration="8990000" />
+      <workItem from="1776687145070" duration="2180000" />
+      <workItem from="1776853257714" duration="572000" />
     </task>
     <servers />
   </component>

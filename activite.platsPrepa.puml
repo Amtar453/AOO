@@ -29,7 +29,7 @@ repeat :Choisir un plat;
     :Ajouter le plat;
     |Système|
     :Sauvegarde du fichier;
-    :Ordre de préparation [Sauvegardé]; <<task>>
+    :Ordre de préparation [Incomplet]; <<task>>
 repeat while (Tous les plats ont été ajoutés à l'ordre ?)
 
 
@@ -39,7 +39,7 @@ repeat while (Tous les plats ont été ajoutés à l'ordre ?)
 |Système|
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation [Complété];
+    :Ordre de préparation [Incomplet];
 else (non)
     :Refuser l'accès;
     stop
@@ -57,7 +57,7 @@ repeat while (liste complète ?)
 
 |Système|
 :Sauvegarde du fichier;
-:Ordre de préparation [Complété]; <<task>>
+:Ordre de préparation [Complet]; <<task>>
 
 |Chef Traiteur|
 :Demander au gestionnaire la vérification des stocks;
@@ -68,7 +68,7 @@ repeat while (liste complète ?)
 |Système|
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation [Complété];
+    :Ordre de préparation [Complet];
 else (non)
     :Refuser l'accès;
     stop
@@ -119,7 +119,7 @@ end fork
 
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation [Validé];
+    :Ordre de préparation [Complet];
 else (non)
     :Refuser l'accès;
     stop
@@ -138,7 +138,7 @@ end split
 |Système|
 :Vérifier les droits d'accès;
 if (Droits valides ?) then (oui)
-    :Ordre de préparation \n[Attribué au Cuisinier]; <<task>>
+    :Ordre de préparation \n[Complet]; <<task>>
 else (non)
     :Refuser l'accès;
     stop
@@ -166,7 +166,7 @@ endif
 |Système|
 :Mise à jour des stocks avec les quantités réellement utilisées;
 :Mise à jour de l'ordre de préparation;
-:Ordre de préparation [Mis à jour]; <<task>>
+:Ordre de préparation [Quantités réelles ajustées]; <<task>>
 
 :Génération des étiquettes \navec DLC, prix, ingrédients;
 :Étiquettes [Nouvelles]; <<task>>
