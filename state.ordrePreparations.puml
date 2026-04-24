@@ -8,7 +8,6 @@ state "Date décalée" as carteDates
 state "Annulé" as carteCancel
 state "Quantités réelles ajustées" as carteQuant : exit/ ajouter une remarque
 state "Plats infaisables" as carteDel
-state "Remplacement" as carteReplace
 
 state cAdaptation <<choice>>
 state cCancel <<choice>>
