@@ -24,10 +24,9 @@ carteDates -up> carteFull : Arrivée du stock
 
 cAdaptation --> c3 : [Stock insuffisant AND date inajustable] / \nPossibilité de remplacement ?
 c3 --> carteDel : [Non] / Suppression des \nplats infaisables
-c3 --> carteReplace : [Oui] / Remplacement des \nplats infaisables
+c3 -up> carteFull : [Oui] / Remplacement des \nplats infaisables
 
 carteDel --> cCancel : L'ordre est-il vide ?
-carteReplace -up> carteFull
 
 cCancel --> carteCancel : [Oui] / Annulation de l'ordre
 cCancel -left> carteFull : [Non]
