@@ -6,7 +6,11 @@ skin rose
 *** Identifier les besoins du client
 *** Définition des objectifs avec le client
 ** Planning
-*** Work breakdown structure
+*** Définition de la gestion du projet
+**** Work breakdown structure
+**** Diagramme de gantt 
+**** Matrice RACI pour la gestion du projet
+**** Matrice de FARMER pour la gestion du projet 
 *** Analyse
 **** Besoin
 **** Orienté Objet
@@ -24,5 +28,5 @@ skin rose
 *** Acceptance 
 *** Post mortem 
 *** Phase de transition 
-*** Retour 
+
 @endwbs
